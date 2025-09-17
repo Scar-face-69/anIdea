@@ -1,0 +1,25 @@
+<script>
+  async function sendMessage() {
+    const input = document.getElementById("input");
+    const messagesDiv = document.getElementById("messages");
+    const userText = input.value.trim();
+    if (!userText) return;
+
+    // Show user message
+    messagesDiv.innerHTML += `<div class="msg user">${userText}</div>`;
+    input.value = "";
+
+    // Call backend (not OpenAI directly)
+    const response = await fetch("http://localhost:5000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userText })
+    });
+
+    const data = await response.json();
+
+    // Show bot reply
+    messagesDiv.innerHTML += `<div class="msg bot">${data.reply}</div>`;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+</script>
